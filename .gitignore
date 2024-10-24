@@ -1,1 +1,10 @@
+/.dist
 /venv
+/Drugs
+/PhysiologicalResponse
+/PTB-Diagnostic/ptb-diagnostic-ecg-database-1.0.0
+/PTB-Diagnostic/ptb-xl
+/PTB-Diagnostic/.dist
+/PTB-Diagnostic/.venv
+/SHDB-AF
+/SuddenCardiacDeath
