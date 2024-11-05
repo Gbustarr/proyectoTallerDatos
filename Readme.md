@@ -209,6 +209,7 @@ Reporte de clasificación:
 Siendo 0 la clase HC y 1 la clase STEMI.
 
 Su matriz de confusión:
+
 ![Matriz de confusión QRST](/fig/matriz_confusion_RF_QRST.png)
 
 Siendo 0 la clase HC y 1 la clase STEMI.
