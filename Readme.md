@@ -2,8 +2,8 @@
 
 El proyecto se centra en la predicción del riesgo de eventos cardíacos utilizando registros de ECG (electrocardiogramas) de la base de datos PTB Diagnostic ECG y PTB-XL de PhysioNet. La finalidad es desarrollar un modelo de aprendizaje profundo que ayude a identificar pacientes en riesgo de sufrir eventos cardíacos, basándose en características extraídas de los datos electrocardiográficos.
 
-## Metodologia
-En el siguiente gráfico se resume la metodologia utilizada en el proyecto:
+## Metodología
+En el siguiente gráfico se resume la metodología utilizada en el proyecto:
 
 ![Metodologia](/fig/metodologia.png)
 
@@ -18,7 +18,7 @@ En el siguiente gráfico se resume la metodologia utilizada en el proyecto:
 
 - I. Obtención de datos
 - II. Análisis exploratorio de datos.
-- III. Extracto de características y selección de modelos.
+- III. Extracción de características y selección de modelos.
 - IV. Entrenamiento y evaluación de modelos
 - V. Comunicación de Resultados
 
@@ -362,21 +362,23 @@ Omitido por tiempo de entrenamiento.
 
 **Redes neuronales**
 
-Por evaluar.
+Precision : 0.8295830488204956
+
+![Matriz de confusión QRST](/fig/matriz_confusion_RN_QRST_SMOTE.png)
 
 **ADABOOST**
 
-Por evaluar.
+Precision: 0.65
 
 **XGBOOST**
 
-Por evaluar.
+Precision: 0.67
 
 #### Respecto al complejo ST
 
 **RANDOM FOREST**
 
-Precisión: 0.7298198902468286
+Precisión: 0.7317161897537907
 Reporte de clasificación:
 |             |  precision |  recall | f1-score |  support|
 |-------------|------------|---------|----------|---------|
@@ -400,11 +402,11 @@ Precision: 0.784372866153717
 
 **ADABOOST**
 
-Por evaluar.
+Precision: 0.66
 
 **XGBOOST**
 
-Por evaluar.
+Precision: 0.69
 
 
 ## Conclusiones
