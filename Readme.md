@@ -209,19 +209,19 @@ Para el entrenamiento y evaluación de los modelos se utilizó la librería `skl
 
 La distribución en todos las etapas fue de 80% para entrenamiento y 20% para prueba.
 
-### Resultados Modelado Simple
+### Resultados Extracción general de caracteristicas por canal
 
-Los resultados obtenidos para el modelado simple fueron los siguientes:
+**RANDOM FOREST**
 
-Precisión: 0.8898254063816978
+Precisión: 0.8908872901678657
 Reporte de clasificación:
 |               |precision|    recall|  f1-score   |support|
 |---------------|---------|----------|------------|--------|
- |          0    |   0.93  |    0.84  |    0.88    |   835|
- |     1   |    0.86  |    0.94   |   0.89    |   826|
- |   accuracy    |         |         |     0.89  |    1661|
- |  macro avg    |   0.89  |    0.89   |   0.89   |   1661|
-|weighted avg    |   0.89   |   0.89   |   0.89  |    1661|
+ |          0    |   0.96  |    0.85  |    0.90    |   984|
+ |     1   |    0.81  |    0.95   |   0.88    |   684|
+ |   accuracy    |         |         |     0.89  |    1668|
+ |  macro avg    |   0.89  |    0.90   |   0.89   |   1668|
+|weighted avg    |   0.90   |   0.89   |   0.89  |    1668|
 
 Siendo 0 la clase HC y 1 la clase STEMI.
 
@@ -229,21 +229,50 @@ Y la matriz de confusión:
 
 ![Matriz de confusión](/fig//matriz_confusion_RF_Simple.png)
 
+**SVM**
 
+Precisión: 0.6504796163069544
 
-### Resultados Modelado Complejo
-
-**Respecto al complejo QRST:**
-
-Precisión: 0.9593105397004804
 Reporte de clasificación:
-|            |   precision|    recall | f1-score  | support|
-|------------|------------|-----------|-----------|--------|
-|           0 |      0.97  |    0.95  |    0.96  |    8864|
-|           1  |     0.95  |    0.97  |    0.96  |    8831|
- |   accuracy    |          |       |      0.96   |  17695|
- |  macro avg    |   0.96    |  0.96   |   0.96   |  17695|
-|weighted avg    |   0.96    |  0.96     | 0.96   |  17695|
+|              | precision |   recall | f1-score |  support|
+|--------------|-----------|----------|----------|---------|
+|           0  |     0.74  |    0.62  |    0.68  |     984|
+|           1  |     0.56  |    0.69  |    0.62  |     684|
+|    accuracy  |           |          |    0.65  |    1668|
+|   macro avg  |     0.65  |    0.66  |    0.65  |    1668|
+|weighted avg  |     0.67  |    0.65  |    0.65  |    1668|
+
+![Matriz de confusión](/fig/matriz_confusion_SVM_Simple.png)
+
+**Redes neuronales**
+
+Precisión: 0.9075841307640076
+
+**ADABOOST**
+
+Precisión: 0.86
+
+**XGBOOST**
+
+Precisión: 0.90
+
+
+### Resultados Extracción específica de características por segmento
+
+#### Respecto al complejo QRST
+
+**RANDOM FOREST**
+
+Precisión: 0.8858204023970652
+Reporte de clasificación:
+|             |  precision |  recall | f1-score |  support|
+|-------------|------------|---------|----------|---------|
+|0            |     0.29   |   0.58  |   0.39   |    8301|
+|1            |     0.97   |   0.91  |   0.94   |  123360|
+|accuracy     |            |         |   0.89   |  131661|
+|macro avg    |     0.63   |   0.74  |   0.66   |  131661|
+|weighted avg |     0.93   |   0.89  |   0.90   |  131661|
+
 
 Siendo 0 la clase HC y 1 la clase STEMI.
 
@@ -253,27 +282,130 @@ Su matriz de confusión:
 
 Siendo 0 la clase HC y 1 la clase STEMI.
 
-**Respecto al segmento ST:**
+**SVM**
 
-Precisión: 0.9074314778185928
+Sin resultados despues de 5 horas de entrenamiento.
+
+**Redes neuronales**
+
+Precisión: 0.9557033777236938
+
+![Matriz de confusión QRST](/fig/matriz_confusion_RN_QRST.png)
+
+**ADABOOST**
+
+Precisión: 0.94
+
+**XGBOOST**
+
+Precisión: 0.95
+
+![Matriz de confusión QRST](/fig/matriz_confusion_XG_QRST.png)
+
+#### Respecto al complejo ST
+
+**RANDOM FOREST**
+
+Precisión: 0.9028630252556135
 Reporte de clasificación:
-|             |  precision  |  recall | f1-score |  support|
-|-------------|-------------|---------|----------|---------|
-|           0   |    0.91   |  0.90   |   0.91    |  8864|
- |          1    |   0.90   |   0.91    |  0.91   |   8831|
-|    accuracy     |       |       |        0.91  |   17695|
-|   macro avg   |    0.91    |  0.91    |  0.91  |   17695|
-|weighted avg    |   0.91    |  0.91   |   0.91   |  17695|
+|             |  precision |  recall | f1-score |  support|
+|-------------|------------|---------|----------|---------|
+|0            |     0.23   |   0.44  |   0.31   |    6262|
+|1            |     0.97   |   0.93  |   0.95   |  122937|
+|accuracy     |            |         |   0.90   |  129199|
+|macro avg    |     0.60   |   0.68  |   0.63   |  129199|
+|weighted avg |     0.93   |   0.90  |   0.92   |  129199|
 
-Siendo 0 la clase HC y 1 la clase STEMI.
+**SVM**
 
-Su matriz de confusión:
+Omitido por tiempo de entrenamiento.
 
-![Matriz de confusión ST](/fig/matriz_confusion_RF_ST.png)
+**Redes neuronales**
+
+Precisión: 0.9368395209312439
+
+![Matriz de confusión ST](/fig/matriz_confusion_RN_ST.png)
+
+**ADABOOST**
+
+Precisión: 0.94
+
+**XGBOOST**
+
+Precisión: 0.95
+
+![Matriz de confusión ST](/fig/matriz_confusion_XG_ST.png)
+
+
+### Resultados Extracción específica de características por segmento con SMOTE
+
+#### Respecto al complejo QRST
+
+**RANDOM FOREST**
+
+Precisión: 0.6886093831886435
+Reporte de clasificación:
+|             |  precision |  recall | f1-score |  support|
+|-------------|------------|---------|----------|---------|
+|0            |     0.15   |   0.80  |   0.25   |    8301|
+|1            |     0.98   |   0.68  |   0.80   |  123360|
+|accuracy     |            |         |   0.69   |  131661|
+|macro avg    |     0.56   |   0.74  |   0.52   |  131661|
+|weighted avg |     0.93   |   0.69  |   0.77   |  131661|
+
+
+![Matriz de confusión QRST](/fig/matriz_confusion_RF_QRST_SMOTE.png)
+
+**SVM**
+
+Omitido por tiempo de entrenamiento.
+
+**Redes neuronales**
+
+Por evaluar.
+
+**ADABOOST**
+
+Por evaluar.
+
+**XGBOOST**
+
+Por evaluar.
+
+#### Respecto al complejo ST
+
+**RANDOM FOREST**
+
+Precisión: 0.7298198902468286
+Reporte de clasificación:
+|             |  precision |  recall | f1-score |  support|
+|-------------|------------|---------|----------|---------|
+|0            |     0.12   |   0.74  |   0.21   |    6262|
+|1            |     0.98   |   0.73  |   0.84   |  122937|
+|accuracy     |            |         |   0.73   |  129199|
+|macro avg    |     0.55   |   0.73  |   0.52   |  129199|
+|weighted avg |     0.94   |   0.73  |   0.81   |  129199|
+
+![Matriz de confusión ST](/fig/matriz_confusion_RF_ST_SMOTE.png)
+
+**SVM**
+
+Omitido por tiempo de entrenamiento.
+
+**Redes neuronales**
+
+Precision: 0.784372866153717
+
+![Matriz de confusión ST](/fig/matriz_confusion_RN_ST_SMOTE.png)
+
+**ADABOOST**
+
+Por evaluar.
+
+**XGBOOST**
+
+Por evaluar.
+
 
 ## Conclusiones
 
-El modelo entrenado con las características completas del complejo QRST muestra una mayor capacidad para predecir la etiqueta de registro, ya sea como sano o de tipo STEMI. Es importante señalar que las diferencias entre el modelo simple, que utiliza características generales de cada canal del registro, y el modelo complejo, basado en la extracción del segmento ST, son mínimas, con una variación aproximada del 1%. Esto sugiere que, si es necesario optimizar recursos, optar por una identificación general de los registros sería preferible. Sin embargo, si se requiere una mayor precisión en el modelo, la opción más adecuada sería el modelado complejo que utiliza los puntos QRST.
-
-
-![Resultados](/fig/metricas_finales.png)
