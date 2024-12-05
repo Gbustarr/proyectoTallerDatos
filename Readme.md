@@ -2,14 +2,33 @@
 
 El proyecto se centra en la predicción del riesgo de eventos cardíacos utilizando registros de ECG (electrocardiogramas) de la base de datos PTB Diagnostic ECG y PTB-XL de PhysioNet. La finalidad es desarrollar un modelo de aprendizaje profundo que ayude a identificar pacientes en riesgo de sufrir eventos cardíacos, basándose en características extraídas de los datos electrocardiográficos.
 
+## Metodologia
+En el siguiente gráfico se resume la metodologia utilizada en el proyecto:
+
+![Metodologia](/fig/metodologia.png)
+
+1. **Obtención de datos**: Se obtuvieron los registros ECG de las bases de datos PTB Diagnostic ECG y PTB-XL de PhysioNet. De la base de datos PTB Diagnostic ECG se obtuvieron registros de pacientes con infarto al miocardio (STEMI). De la base de datos PTB-XL se obtuvieron registros de pacientes sanos (HC).
+2. **Preprocesamiento de registros**: Se realizó un preprocesamiento de los registros ECG, que incluyó la eliminación de canales de posición de electrodos, el downsampling de los registros STEMI de 1000 a 500 Hz y el filtrado de ruido mediante un filtro pasa banda Butterworth de 0.67 a 30 Hz. Los registros HC no fueron preprocesados debido a que ya presentaban un filtrado de ruido y una frecuencia de muestreo de 500 Hz.
+3. **Extracción de características**: Se extrajeron características de los registros ECG de ambas bases de datos. El valor maximo, minimo, media y desviación estandar de los 12 canales de cada registro fueron extraidos y proporcionados a los modelos de clasificación.
+   1. **Extracción general**: Este proceso se caracteriza por la extracción de características generales de cada canal de cada registro.
+   2. **Extracción compleja**: Este proceso se caracteriza por la extracción de características específicas de los segmentos QRST y ST de cada registro.
+   3. **Extracción compleja con SMOTE**: Similar al proceso anterior, pero con la inclusión de la técnica SMOTE para balancear la cantidad de caracteristicas extraidas.
+
 ## Etapas contenidas en este proyecto
 
-- I. Análisis exploratorio de datos.
-- II. Selección de modelos
-- III. Entrenamiento y evaluación de modelos
-- IV. Comunicación de Resultados
+- I. Obtención de datos
+- II. Análisis exploratorio de datos.
+- III. Extracto de características y selección de modelos.
+- IV. Entrenamiento y evaluación de modelos
+- V. Comunicación de Resultados
 
-## Etapa I Análisis exploratorio de datos
+## Etapa I Obtención de datos
+
+Como se mencionó anteriormente, los datos utilizados en este proyecto provienen de las bases de datos PTB Diagnostic ECG y PTB-XL de PhysioNet. Estas bases de datos contienen registros de ECG de pacientes con diferentes condiciones cardíacas, como infarto al miocardio y ritmo cardíaco normal.
+
+La obtención de estos datos se realiza mediante el uso de la libreria boto3 de AWS para la descarga automatica de los registros.
+
+## Etapa II Análisis exploratorio de datos
 
 Respecto a esta etapa, se realizaron las siguientes actividades:
 
@@ -26,9 +45,9 @@ En este caso, tales registros tienen las siguientes propiedades:
 - **comments**: Comentarios sobre el registro.
 - **p_signal**: Señales físicas.
 
-Como se puede observar, en el atributo 'comments' existe una lista de información relevante sobre el paciente, en la cual se puede identificar que el valor de la llave **'Reason for admission'** clasifica a al registro como _'Myocardal infarction'_ en este caso. También existe la clave **'Acute infarction (localization)'** que indica la localización del infarto.
+Aqui uno de los atributos relevates es **comments**, el cual contiene valores tales como **'Reason for admission'** el cual registra la razón de admisión del paciente y permite clasificar los registros anómalos y sanos. Por ejemplo, los registros con infarto al miocardio son llamados _'Myocardal infarction'_. También existe la clave **'Acute infarction (localization)'** que indica la localización del infarto.
 
-Debido a que esta base de datos tiene registros tanto de pacientes con Infarto al miocardio y de pacientes sanos, se procedió a realizar una busqueda de los registros que contienen la clave **'Reason for admission'** con el valor _'Myocardal infarction'_ para identificar los registros de pacientes con infarto al miocardio.
+Debido a que esta base de datos tiene registros tanto de pacientes con Infarto al miocardio y de pacientes sanos, se procedió a realizar una búsqueda de los registros que contienen la clave **'Reason for admission'** con el valor _'Myocardal infarction'_ para identificar los registros de pacientes con infarto al miocardio.
 
 Además se identificó los valores únicos relacionados a la clave **'Acute infarction (localization)'** para identificar las localizaciones del infarto ya que en este apartado existe información faltante y ambigüa como se puede observar en la siguiente imagen:
 
@@ -45,16 +64,14 @@ Se identifica la distribución de las clases STEMI y HC (Healthy Control) en la 
 
 ![Distribución de las clases](/fig/distribucion_preliminar.png)
 
-### Identificación de problematica y solución
+### Desbalance de clases y solución propuesta
 
-Se identifica la problematica de la base de datos PTB Diagnostic ECG, la cual se refiere al desbalance de clases respecto a los registros STEMI y HC. La solución seleccionada respecto a la problematica está relacionada al uso de otra base de datos (PTB-XL) para obtener y balancear los registros HC (Clase minoritaria).
+Se identifica que la base de datos PTB Diagnostic ECG contiene un desbalance de clases entre los registros STEMI y HC, lo cual puede afectar el rendimiento de los modelos de clasificación.
 
-Otras soluciones propuestas fueron:
-1. **Uso de técnicas de resampling**: Se puede utilizar técnicas de resampling como oversampling o undersampling para balancear las clases. Oversampling puede generar nuevos ejemplos de la clase minoritaria, mientras que undersampling puede eliminar ejemplos de la clase mayoritaria.
-2. **Generación de datos sintéticos**: Se pueden generar datos sintéticos para la clase minoritaria utilizando técnicas como SMOTE (Synthetic Minority Over-sampling Technique) o ADASYN (Adaptive Synthetic Sampling Approach).
-3. **Ajuste de pesos de clase**: Algunos algoritmos de machine learning permiten ajustar los pesos de clase para penalizar más los errores en la clase minoritaria. Esto puede ayudar al modelo a prestar más atención a los ejemplos de la clase minoritaria.
+Respecto a esto, se propuso la **incorporación de registros de pacientes sanos de la base de datos PTB-XL** para balancear las clases.
 
-Estas soluciones fueron desechadas debido a que se priorizó la obtención de registros reales asi evitando un sesgo creado por la generación de datos sintéticos o el ajuste de pesos de clase.
+Otras soluciones que se tuvieron en cuenta fueron la de uso de técnicas de resampling, generación de datos sintéticos y ajuste de pesos de clase. Sin embargo, estas soluciones fueron desechadas debido a que se priorizó la obtención de registros reales asi evitando un sesgo creado por la generación de datos sintéticos o el ajuste de pesos de clase.
+
 
 ### Identificación de las propiedades de los registros ECG de la base de datos PTB-XL
 
@@ -83,6 +100,8 @@ Luego de incorporar los registros de la base de datos PTB-XL, se obtuvo la sigui
 
 ![Distribución de las clases luego de incorporar PTB-XL](/fig/distribucion_final_registros.png)
 
+Cabe destacar que la base de datos PTB-XL posee mucho mas registros que la base de datos PTB Diagnostic ECG pero solo se limitó a obtener la cantidades necesarias para balancear las clases.
+
 ### Preprocesamiento de los registros
 
 Se realizó un preprocesamiento de los registros ECG de ambas bases de datos, el cual consistió en:
@@ -90,7 +109,7 @@ Se realizó un preprocesamiento de los registros ECG de ambas bases de datos, el
 - **Guardado de registros STEMI** en sus respectivo directorio para su procesamiento.
 - **Eliminación de canales de posicion de electrodos** identificando los nombres Vx, Vy y Vz.
 - **Downsampling de canales** de registros STEMI de 1000 a 500 Hz. 
-- **Filtrado de ruido** mediante un filtro pasa banda Butterworth de 0.67 a 30 Hz.
+- **Filtrado de ruido** mediante un filtro pasa banda Butterworth de 0.67 a 30 Hz [(Basado en este artículo)](https://www.cinc.org/archives/2020/pdf/CinC2020-403.pdf).
 
 La eliminación de la información de los canales de posicion de los electrodos se realizó debido a que no serán utilizados en el desarrollo de este proyecto.
 
@@ -102,21 +121,20 @@ Un ejemplo de la señal preprocesada de los registros STEMI se puede apreciar en
 
 ![Comparativa de señales](/fig/muestr_señales_procesadas.png)
 
-Se puede observar la disminució de las muestras en cada canal debido al downsampling. Tambien se puede percibi la eliminación de ruido en la señal como resultado una señal mas estable y alineada.
+Se puede observar la disminució de las muestras en cada canal debido al downsampling. Tambien se puede percibir que la eliminación de ruido en la señal como resultado una señal mas estable y alineada.
 
 
-## Etapa II Selección de modelos
+## Etapa III Extracción de características y selección de modelos
 
-El modelo seleccionado para la clasificación de los registros ECG de la base de datos PTB Diagnostic ECG y PTB-XL fue el de Random Forest debido a que es menos susceptible a ser influenciado por valores atípicos. Ademas es un modelo rápido de entrenar y evaluar.
+Como se mostró en la metodología, se realizaron tres tipos de extracción de características:
 
-Respecto a su relación con la problematica del proyecto, Random Forest se seleccionó debido a que permite la clasificación de registros STEMI y HC con la ayuda de un descriptor que se adquirió a partir de los registros ECG preprocesados.
+- **Extracción general**: Este proceso se caracteriza por la extracción de características generales de cada canal de cada registro.
+- **Extracción específica**: Este proceso se caracteriza por la extracción de características específicas de los segmentos QRST y ST de cada registro.
+- **Extracción específica con SMOTE**: Similar al proceso anterior, pero con la inclusión de la técnica SMOTE para balancear la cantidad de caracteristicas extraidas.
 
-Cabe destacar que se realizaron 2 tipos de modelado y extracción de caracteristicas:
-- Modelado simple
-- Modelado complejo
+### Extracción general de caracteristicas por canal
 
-### Uso de un modelado simple
-El modelado simple refiere al proceso de extracción de caracteristicas tales como media, desviación estándar, valores minimos y máximos de los 12 canales de cada registro.
+ Proceso de extracción de caracteristicas tales como media, desviación estándar, valores minimos y máximos de los 12 canales de cada registro.
 
 Luego de obtener tales caracteristicas se crearon las etiquetas identificadoras de cada una, utilizando el valor 0 para los registros HC y 1 para los registros STEMI. Este proceso se llevó a cabo mediante la identificación de la longitud de caracteristicas STEMI y HC, y la creación de un arreglo de etiquetas con los valores 0 y 1.
 
@@ -127,10 +145,11 @@ La cantidad de caracteristicas se resumen en la siguiente lista:
 
 Como se puede observar, la cantidad de caracteristicas es igual para ambas clases, lo que indica que no existe un desbalance en la cantidad de caracteristicas extraidas de los registros STEMI y HC.
 
-### Uso de un modelado complejo
-Para el modelado complejo se identificaron los picos R de la señal I  de cada registro ECG, los cuales son los puntos más altos de la onda QRS. Estos picos se identificaron mediante el uso de la librería `biosppy`.
+### Extracción específica de características por segmento QRST y ST
 
-Una vez obtenido estos indices, se obtuvieron los puntos Q,S y T. Los primeros puntos se obtenieron mediante la referencia del valor mínimo antes y después del punto R respectivamente. El punto T se obtuvo mediante la referencia del valor máximo después del punto S.
+Proceso de extracción de caracteristicas en el cual se identificaron los picos R de la señal I  de cada registro ECG, los cuales son los puntos más altos de la onda QRS. Estos picos se identificaron mediante el uso de la librería `biosppy`.
+
+Obteniendo estos indices, se obtuvieron los puntos Q,S y T. Los primeros puntos se obtuvieron mediante la referencia del valor mínimo antes y después del punto R respectivamente. El punto T se obtuvo mediante la referencia del valor máximo después del punto S.
 
 A continuación se muestran dos imagenes de la obtención de los puntos QRST:
 
@@ -151,24 +170,44 @@ Para los dos tipos de segmentos se obtienen las siguientes caracteristicas:
 - Valor máximo
 - Longitud del segmento
 
+
 Luego de realizar la extracción de características, se obtuvieron los siguientes resultados:
 
 | Tipo de registro | N° Características QRST | N° Características ST |
 |------------------|-------------------------|-----------------------|
-| STEMI            | 557134                  | 557134                |
-| HC               | 44236                  | 44236               |
+| STEMI            | 595172                  | 595172               |
+| HC               | 45632                 | 45632                |
+|TOTAL             | 640804                 | 640804               |
 
-Se puede observar un gran desvalance entre las cantidades de caracteristicas extraidas de los registros STEMI y HC. Este desbalance fue solucionado mediante la eliminación de caracteristicas de los registros STEMI hasta igualar la cantidad de caracteristicas de los registros HC.
+Se puede observar un gran desvalance entre las cantidades de caracteristicas extraidas de los registros STEMI y HC. Este desbalance se mantuvo en esta etapa.
 
 Luego se concatenaron las caracteristicas QRST de los registros STEMI y HC, y se crearon las etiquetas identificadoras de cada una, utilizando el valor 0 para los registros HC y 1 para los registros STEMI. Este proceso se llevó a cabo mediante la identificación de la longitud de caracteristicas STEMI y HC, y la creación de un arreglo de etiquetas con los valores 0 y 1 tal como en el modelo simple.
 
-## Etapa III Entrenamiento y evaluación de modelos
+
+### Extracción específica de características por segmento QRST y ST con SMOTE
+
+El desbalanceo de caracteristicas se puede observar en el siguiente gráfico:
+
+![Desbalance de caracteristicas](/fig/desbalance_caracteristicas.png)
+
+Siendo la barra roja para las caracteristicas extraidas de los registros STEMI y la barra verde para las caracteristicas extraidas de los registros HC.
+
+Lo que se implementó en esta etapa fuela la misma extracción de caracteristicas que en el proceso anterior, pero se balanceó las caracteristicas extraidas de los registros HC de ambos segmentos con la técnica SMOTE al 80% perteneciente al segmento de entrenamiento.
+
+
+| Tipo de registro | 80% Características QRST | 80% Características ST |
+|------------------|-------------------------|-----------------------|
+| STEMI            | 471812                | 471812             |
+| HC               | 471812               | 471812              |
+|TOTAL             | 943624                 | 943624                |
+
+
+
+## Etapa IV Entrenamiento y evaluación de modelos
 
 Para el entrenamiento y evaluación de los modelos se utilizó la librería `sklearn` y se dividió el conjunto de datos en un conjunto de entrenamiento y un conjunto de prueba. El conjunto de entrenamiento se utilizó para entrenar el modelo, mientras que el conjunto de prueba se utilizó para evaluar el rendimiento del modelo. 
 
-La distribución en el modelado simple y complejo fue de 80% para entrenamiento y 20% para prueba.
-
-En el caso del modelado complejo, se entrenó un modelo Random Forest para los segmentos QRST y otro para el segmento ST.
+La distribución en todos las etapas fue de 80% para entrenamiento y 20% para prueba.
 
 ### Resultados Modelado Simple
 
