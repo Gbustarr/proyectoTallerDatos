@@ -15,7 +15,7 @@ Los eventos cardíacos son una de las principales causas de muerte en todo el mu
 ## Sobre el proyecto
 El proyecto se centra en la predicción del riesgo de eventos cardíacos utilizando registros de ECG (electrocardiogramas) de la base de datos PTB Diagnostic ECG y PTB-XL de PhysioNet. La finalidad es desarrollar un modelo de aprendizaje profundo que ayude a identificar pacientes en riesgo de sufrir eventos cardíacos, basándose en características extraídas de los datos electrocardiográficos.
 
-## Hipotesis
+## Hipótesis
 
 La comparación de diferentes técnicas de machine learning, incluyendo Random Forest, AdaBoost, XGBoost y redes neuronales, aplicada al análisis de registros de ECG de 12 derivaciones, permitirá identificar el modelo más preciso para predecir el riesgo de eventos cardíacos (STEMI), con una precisión cercana al 95%, cumpliendo con los estándares de nivel médico y demostrando que las técnicas avanzadas de ensamble y redes neuronales tienen un rendimiento superior o comparable en términos de exactitud y robustez.
 
