@@ -1,8 +1,11 @@
 # Predicción de Riesgo de Evento Cardíaco con Señales de ECG Usando la Base de Datos PTB Diagnostic ECG y PTB-XL.
 
 Autor: Guillermo Bustamante Arriagada
+
 Contacto: gbustamante21@alumnos.utalca.cl
+
 Afiliación: Universidad de Talca, Chile
+
 Fecha: 05-12-2024
 
 ## Contexto
