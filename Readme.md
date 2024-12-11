@@ -1,6 +1,23 @@
 # Predicción de Riesgo de Evento Cardíaco con Señales de ECG Usando la Base de Datos PTB Diagnostic ECG y PTB-XL.
 
+Autor: Guillermo Bustamante Arriagada
+Contacto: gbustamante21@alumnos.utalca.cl
+Afiliación: Universidad de Talca, Chile
+Fecha: 05-12-2024
+
+## Contexto
+
+Los eventos cardíacos son una de las principales causas de muerte en todo el mundo. La detección temprana de pacientes en riesgo de sufrir eventos cardíacos es fundamental para prevenir complicaciones y mejorar la calidad de vida de los pacientes. En este sentido, el análisis de los registros de ECG (electrocardiogramas) es una herramienta útil para identificar pacientes en riesgo de sufrir eventos cardíacos.
+
+## Sobre el proyecto
 El proyecto se centra en la predicción del riesgo de eventos cardíacos utilizando registros de ECG (electrocardiogramas) de la base de datos PTB Diagnostic ECG y PTB-XL de PhysioNet. La finalidad es desarrollar un modelo de aprendizaje profundo que ayude a identificar pacientes en riesgo de sufrir eventos cardíacos, basándose en características extraídas de los datos electrocardiográficos.
+
+## Hipotesis
+
+Se plantea que es posible predecir el riesgo de eventos cardíacos utilizando registros de ECG y técnicas de aprendizaje profundo. Se espera que los modelos de clasificación desarrollados sean capaces de identificar pacientes en riesgo de sufrir eventos cardíacos con una precisión aceptable.
+
+especificar tecnica,metrica(valor > 95)
+
 
 ## Metodología
 En el siguiente gráfico se resume la metodología utilizada en el proyecto:
@@ -132,7 +149,7 @@ Como se mostró en la metodología, se realizaron tres tipos de extracción de c
 - **Extracción específica**: Este proceso se caracteriza por la extracción de características específicas de los segmentos QRST y ST de cada registro.
 - **Extracción específica con SMOTE**: Similar al proceso anterior, pero con la inclusión de la técnica SMOTE para balancear la cantidad de caracteristicas extraidas.
 
-### Extracción general de caracteristicas por canal
+### 3.1 Extracción general de caracteristicas por canal 
 
  Proceso de extracción de caracteristicas tales como media, desviación estándar, valores minimos y máximos de los 12 canales de cada registro.
 
@@ -145,7 +162,7 @@ La cantidad de caracteristicas se resumen en la siguiente lista:
 
 Como se puede observar, la cantidad de caracteristicas es igual para ambas clases, lo que indica que no existe un desbalance en la cantidad de caracteristicas extraidas de los registros STEMI y HC.
 
-### Extracción específica de características por segmento QRST y ST
+### 3.2 Extracción específica de características por segmento QRST y ST
 
 Proceso de extracción de caracteristicas en el cual se identificaron los picos R de la señal I  de cada registro ECG, los cuales son los puntos más altos de la onda QRS. Estos picos se identificaron mediante el uso de la librería `biosppy`.
 
@@ -248,13 +265,19 @@ Reporte de clasificación:
 
 Precisión: 0.9075841307640076
 
+![Matriz de confusión](/fig/matriz_confusion_RN.png)
+
 **ADABOOST**
 
 Precisión: 0.86
 
+![Matriz de confusión](/fig/matriz_confusion_ADABOOST.png)
+
 **XGBOOST**
 
 Precisión: 0.90
+
+![Matriz de confusión](/fig/matriz_confusion_XGBOOST.png)
 
 
 ### Resultados Extracción específica de características por segmento
@@ -411,3 +434,7 @@ Precision: 0.69
 
 ## Conclusiones
 
+El desarrollo del proyecto permitió obtener resultados prometedores en la predicción del riesgo de eventos cardíacos utilizando registros de ECG y técnicas de aprendizaje profundo. Los modelos de clasificación desarrollados lograron identificar pacientes en riesgo de sufrir eventos cardíacos con una precisión superior al 90% en algunos casos.
+Pero debido a la naturaleza del proyecto, no se recomienda su uso como un sistema autonomo clasificador de pacientes con riesgo de eventos cardíacos, sino como una **herramienta de apoyo** para los profesionales de la salud para **priorizar pacientes** en su atención.
+
+Esto debido a la existencia de falsos negativos
