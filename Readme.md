@@ -14,9 +14,7 @@ El proyecto se centra en la predicción del riesgo de eventos cardíacos utiliza
 
 ## Hipotesis
 
-Se plantea que es posible predecir el riesgo de eventos cardíacos utilizando registros de ECG y técnicas de aprendizaje profundo. Se espera que los modelos de clasificación desarrollados sean capaces de identificar pacientes en riesgo de sufrir eventos cardíacos con una precisión aceptable.
-
-especificar tecnica,metrica(valor > 95)
+La comparación de diferentes técnicas de machine learning, incluyendo Random Forest, AdaBoost, XGBoost y redes neuronales, aplicada al análisis de registros de ECG de 12 derivaciones, permitirá identificar el modelo más preciso para predecir el riesgo de eventos cardíacos (STEMI), con una precisión cercana al 95%, cumpliendo con los estándares de nivel médico y demostrando que las técnicas avanzadas de ensamble y redes neuronales tienen un rendimiento superior o comparable en términos de exactitud y robustez.
 
 
 ## Metodología
@@ -44,6 +42,12 @@ En el siguiente gráfico se resume la metodología utilizada en el proyecto:
 Como se mencionó anteriormente, los datos utilizados en este proyecto provienen de las bases de datos PTB Diagnostic ECG y PTB-XL de PhysioNet. Estas bases de datos contienen registros de ECG de pacientes con diferentes condiciones cardíacas, como infarto al miocardio y ritmo cardíaco normal.
 
 La obtención de estos datos se realiza mediante el uso de la libreria boto3 de AWS para la descarga automatica de los registros.
+
+Los datos sin procesar cuentan con las siguiets características:
+
+- PTB Diagnostic ECG: La base de datos contiene 549 registros de 290 sujetos de entre 17 y 87 años. La base de datos incluye diferentes clases diagnósticas con el siguiente número de sujetos: infarto de miocardio (148), miocardiopatía/insuficiencia cardíaca (18), bloqueo de rama (15), disritmia (14), hipertrofia miocárdica (7), enfermedad valvular (6), miocarditis (4), casos diversos (4) y controles sanos (52).
+- PTB-XL: Comprende 21,799 registros clínicos de ECG de 12 derivaciones con una duración de 10 segundos de 18,869 pacientes, donde el 52% son hombres y el 48% son mujeres, con edades que cubren todo el rango de 0 a 95 años. El conjunto de datos contiene registros clasificados en diferentes superclases, con los siguientes detalles: 9514 registros correspondientes a ECG normales (NORM), 5469 de infarto de miocardio (MI), 5235 con cambios ST/T (STTC), 4898 con trastornos de conducción (CD) y 2649 de hipertrofia (HYP).
+
 
 ## Etapa II Análisis exploratorio de datos
 
@@ -201,7 +205,7 @@ Se puede observar un gran desvalance entre las cantidades de caracteristicas ext
 Luego se concatenaron las caracteristicas QRST de los registros STEMI y HC, y se crearon las etiquetas identificadoras de cada una, utilizando el valor 0 para los registros HC y 1 para los registros STEMI. Este proceso se llevó a cabo mediante la identificación de la longitud de caracteristicas STEMI y HC, y la creación de un arreglo de etiquetas con los valores 0 y 1 tal como en el modelo simple.
 
 
-### Extracción específica de características por segmento QRST y ST con SMOTE
+### 3.3 Extracción específica de características por segmento QRST y ST con SMOTE
 
 El desbalanceo de caracteristicas se puede observar en el siguiente gráfico:
 
@@ -226,215 +230,47 @@ Para el entrenamiento y evaluación de los modelos se utilizó la librería `skl
 
 La distribución en todos las etapas fue de 80% para entrenamiento y 20% para prueba.
 
-### Resultados Extracción general de caracteristicas por canal
+## Gráficos de comparación de modelos
 
-**RANDOM FOREST**
+### Comparación de resultados de extracción general
 
-Precisión: 0.8908872901678657
-Reporte de clasificación:
-|               |precision|    recall|  f1-score   |support|
-|---------------|---------|----------|------------|--------|
- |          0    |   0.96  |    0.85  |    0.90    |   984|
- |     1   |    0.81  |    0.95   |   0.88    |   684|
- |   accuracy    |         |         |     0.89  |    1668|
- |  macro avg    |   0.89  |    0.90   |   0.89   |   1668|
-|weighted avg    |   0.90   |   0.89   |   0.89  |    1668|
+Matriz de confusión de los modelos de clasificación desarrollados con la extracción general de características:
 
-Siendo 0 la clase HC y 1 la clase STEMI.
+![Comparación de modelos](/fig/Comparativa_Matriz_Confusion_General.png)
 
-Y la matriz de confusión:
+Matriz de resultados de los modelos de clasificación desarrollados con la extracción general de características:
 
-![Matriz de confusión](/fig//matriz_confusion_RF_Simple.png)
+![Comparación de modelos](/fig/Comparativa_Matriz_Reporte_General.png)
 
-**SVM**
+### Comparación de resultados de extracción específica de características por segmento QRST y ST
 
-Precisión: 0.6504796163069544
+Matriz de confusión de los modelos de clasificación desarrollados con la extracción específica de características por segmento QRST y ST:
 
-Reporte de clasificación:
-|              | precision |   recall | f1-score |  support|
-|--------------|-----------|----------|----------|---------|
-|           0  |     0.74  |    0.62  |    0.68  |     984|
-|           1  |     0.56  |    0.69  |    0.62  |     684|
-|    accuracy  |           |          |    0.65  |    1668|
-|   macro avg  |     0.65  |    0.66  |    0.65  |    1668|
-|weighted avg  |     0.67  |    0.65  |    0.65  |    1668|
+![Comparación de modelos](/fig/Comparativa_Matriz_Confusion_QRST_ST.png)
 
-![Matriz de confusión](/fig/matriz_confusion_SVM_Simple.png)
+Matriz de resultados de los modelos de clasificación desarrollados con la extracción específica de características por segmento QRST y ST:
 
-**Redes neuronales**
+![Comparación de modelos](/fig/Comparativa_Matriz_Reporte_QRST_ST.png)
 
-Precisión: 0.9075841307640076
+### Comparación de resultados de extracción específica de características por segmento QRST y ST con SMOTE
 
-![Matriz de confusión](/fig/matriz_confusion_RN.png)
+Matriz de confusión de los modelos de clasificación desarrollados con la extracción específica de características por segmento QRST y ST con SMOTE:
 
-**ADABOOST**
+![Comparación de modelos](/fig/Comparativa_Matriz_Confusion_QRST_ST_Resampled.png)
 
-Precisión: 0.86
+Matriz de resultados de los modelos de clasificación desarrollados con la extracción específica de características por segmento QRST y ST con SMOTE:
 
-![Matriz de confusión](/fig/matriz_confusion_ADABOOST.png)
+![Comparación de modelos](/fig/Comparativa_Matriz_Reporte_QRST_ST_Resampled.png)
 
-**XGBOOST**
+## Analisis de resultados
 
-Precisión: 0.90
-
-![Matriz de confusión](/fig/matriz_confusion_XGBOOST.png)
-
-
-### Resultados Extracción específica de características por segmento
-
-#### Respecto al complejo QRST
-
-**RANDOM FOREST**
-
-Precisión: 0.8858204023970652
-Reporte de clasificación:
-|             |  precision |  recall | f1-score |  support|
-|-------------|------------|---------|----------|---------|
-|0            |     0.29   |   0.58  |   0.39   |    8301|
-|1            |     0.97   |   0.91  |   0.94   |  123360|
-|accuracy     |            |         |   0.89   |  131661|
-|macro avg    |     0.63   |   0.74  |   0.66   |  131661|
-|weighted avg |     0.93   |   0.89  |   0.90   |  131661|
-
-
-Siendo 0 la clase HC y 1 la clase STEMI.
-
-Su matriz de confusión:
-
-![Matriz de confusión QRST](/fig/matriz_confusion_RF_QRST.png)
-
-Siendo 0 la clase HC y 1 la clase STEMI.
-
-**SVM**
-
-Sin resultados despues de 5 horas de entrenamiento.
-
-**Redes neuronales**
-
-Precisión: 0.9557033777236938
-
-![Matriz de confusión QRST](/fig/matriz_confusion_RN_QRST.png)
-
-**ADABOOST**
-
-Precisión: 0.94
-
-**XGBOOST**
-
-Precisión: 0.95
-
-![Matriz de confusión QRST](/fig/matriz_confusion_XG_QRST.png)
-
-#### Respecto al complejo ST
-
-**RANDOM FOREST**
-
-Precisión: 0.9028630252556135
-Reporte de clasificación:
-|             |  precision |  recall | f1-score |  support|
-|-------------|------------|---------|----------|---------|
-|0            |     0.23   |   0.44  |   0.31   |    6262|
-|1            |     0.97   |   0.93  |   0.95   |  122937|
-|accuracy     |            |         |   0.90   |  129199|
-|macro avg    |     0.60   |   0.68  |   0.63   |  129199|
-|weighted avg |     0.93   |   0.90  |   0.92   |  129199|
-
-**SVM**
-
-Omitido por tiempo de entrenamiento.
-
-**Redes neuronales**
-
-Precisión: 0.9368395209312439
-
-![Matriz de confusión ST](/fig/matriz_confusion_RN_ST.png)
-
-**ADABOOST**
-
-Precisión: 0.94
-
-**XGBOOST**
-
-Precisión: 0.95
-
-![Matriz de confusión ST](/fig/matriz_confusion_XG_ST.png)
-
-
-### Resultados Extracción específica de características por segmento con SMOTE
-
-#### Respecto al complejo QRST
-
-**RANDOM FOREST**
-
-Precisión: 0.6886093831886435
-Reporte de clasificación:
-|             |  precision |  recall | f1-score |  support|
-|-------------|------------|---------|----------|---------|
-|0            |     0.15   |   0.80  |   0.25   |    8301|
-|1            |     0.98   |   0.68  |   0.80   |  123360|
-|accuracy     |            |         |   0.69   |  131661|
-|macro avg    |     0.56   |   0.74  |   0.52   |  131661|
-|weighted avg |     0.93   |   0.69  |   0.77   |  131661|
-
-
-![Matriz de confusión QRST](/fig/matriz_confusion_RF_QRST_SMOTE.png)
-
-**SVM**
-
-Omitido por tiempo de entrenamiento.
-
-**Redes neuronales**
-
-Precision : 0.8295830488204956
-
-![Matriz de confusión QRST](/fig/matriz_confusion_RN_QRST_SMOTE.png)
-
-**ADABOOST**
-
-Precision: 0.65
-
-**XGBOOST**
-
-Precision: 0.67
-
-#### Respecto al complejo ST
-
-**RANDOM FOREST**
-
-Precisión: 0.7317161897537907
-Reporte de clasificación:
-|             |  precision |  recall | f1-score |  support|
-|-------------|------------|---------|----------|---------|
-|0            |     0.12   |   0.74  |   0.21   |    6262|
-|1            |     0.98   |   0.73  |   0.84   |  122937|
-|accuracy     |            |         |   0.73   |  129199|
-|macro avg    |     0.55   |   0.73  |   0.52   |  129199|
-|weighted avg |     0.94   |   0.73  |   0.81   |  129199|
-
-![Matriz de confusión ST](/fig/matriz_confusion_RF_ST_SMOTE.png)
-
-**SVM**
-
-Omitido por tiempo de entrenamiento.
-
-**Redes neuronales**
-
-Precision: 0.784372866153717
-
-![Matriz de confusión ST](/fig/matriz_confusion_RN_ST_SMOTE.png)
-
-**ADABOOST**
-
-Precision: 0.66
-
-**XGBOOST**
-
-Precision: 0.69
-
+Los modelos evaluados, especialmente Redes Neuronales, Random Forest y XGBoost, demostraron una alta capacidad predictiva, alcanzando precisiones de hasta 94.89% en la extracción de características específicas (QRST y ST). Esto confirma que los modelos son efectivos para distinguir entre pacientes con infarto al miocardio (STEMI) y pacientes sanos, cumpliendo el objetivo central del proyecto.
+La implementación de tres métodos de extracción de características (general, segmentos QRST y ST) permitió analizar cómo distintas representaciones de los datos impactan el rendimiento de los modelos.
+Los segmentos QRST y ST, más específicos, lograron mejores resultados que la extracción general, mostrando que la segmentación aporta más información relevante para la clasificación.
+El uso de SMOTE ayudó a equilibrar la clase minoritaria (pacientes sanos), abordando uno de los desafíos iniciales del proyecto. Sin embargo, esto afectó la precisión global, especialmente en modelos como Random Forest y XGBoost.
 
 ## Conclusiones
 
-El desarrollo del proyecto permitió obtener resultados prometedores en la predicción del riesgo de eventos cardíacos utilizando registros de ECG y técnicas de aprendizaje profundo. Los modelos de clasificación desarrollados lograron identificar pacientes en riesgo de sufrir eventos cardíacos con una precisión superior al 90% en algunos casos.
-Pero debido a la naturaleza del proyecto, no se recomienda su uso como un sistema autonomo clasificador de pacientes con riesgo de eventos cardíacos, sino como una **herramienta de apoyo** para los profesionales de la salud para **priorizar pacientes** en su atención.
+El desarrollo del proyecto permitió obtener resultados prometedores en la predicción del riesgo de eventos cardíacos utilizando registros de ECG y técnicas de aprendizaje profundo. Los modelos de clasificación desarrollados lograron identificar pacientes en riesgo de sufrir eventos cardíacos con una precisión superior al 94% en algunos casos. Pero debido a la naturaleza del proyecto, no se recomienda su uso como un sistema autónomo clasificador de pacientes con riesgo de eventos cardíacos, sino como una herramienta de apoyo para los profesionales de la salud para priorizar pacientes en su atención.
 
-Esto debido a la existencia de falsos negativos
+Esto debido a la existencia de falsos negativos, es decir, casos en los que el modelo clasifica erróneamente a pacientes enfermos como si estuvieran sanos. Esta situación puede resultar particularmente peligrosa en un contexto clínico, ya que un diagnóstico incorrecto puede retrasar la atención médica oportuna y el tratamiento necesario, aumentando así el riesgo de complicaciones graves o incluso la mortalidad. Los falsos negativos podrían generar una falsa sensación de seguridad tanto en el paciente como en el profesional de la salud, lo que podría tener consecuencias críticas en la toma de decisiones. Por lo tanto, es fundamental que los resultados de los modelos sean interpretados por especialistas, quienes pueden combinar estos datos con otras evaluaciones clínicas para realizar diagnósticos más precisos y garantizar un manejo adecuado de los pacientes.
